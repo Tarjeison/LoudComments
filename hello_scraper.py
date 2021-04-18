@@ -4,29 +4,27 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+import random
+import comment_utils
+from typing import List
 from gtts import gTTS
-from pygame import mixer  # Load the popular external library
-import pyttsx3
+from playsound import playsound
+import os
 import time
 
 
-def tts2(word: str):
-    engine = pyttsx3.init()
-    engine.say(word)
-    engine.runAndWait()
-
-
 def tts1(word: str):
-    language = 'fr-fr'
+    languages = ['no', 'fr', 'da', 'it', 'pl']
+    language = random.choice(languages)
     myobj = gTTS(text=word, lang=language, slow=False)
-    myobj.save("welcome.mp3")
-    mixer.init()
-    mixer.music.load('welcome.mp3')
-    mixer.music.play()
+    myobj.save("comment.mp3")
+    playsound("comment.mp3")
+    os.remove("comment.mp3")
 
 
 def build_firefox() -> Firefox:
     opts = Options()
+    opts.headless = True
     return Firefox(executable_path='C:\\Users\\Trym\\drivers\\gecko\\geckodriver.exe', options=opts)
 
 
@@ -65,7 +63,15 @@ def dismiss_gdpr_if_present(browser: Firefox):
         pass
 
 
-def read_first_comment_in_first_article():
+def read_comments_from_article(article_title: str, comments: List[str]):
+    if len(comments) == 0:
+        return
+    tts1("Fra saken: " + article_title.replace("\n", " "))
+    for comment in comments:
+        tts1(comment)
+
+
+def read_all_vg_comments():
     browser = build_firefox()
     browser.get('https://vg.no')
     time.sleep(2)
@@ -81,19 +87,20 @@ def read_first_comment_in_first_article():
             browser.switch_to.window(browser.window_handles[-1])
             time.sleep(2)
             comments = find_all_comments_in_article(browser)
+            unspoken_comments = comment_utils.get_only_unspoken_comments(comments)
+            comment_utils.save_comments(unspoken_comments)
             browser.close()
             browser.switch_to.window(browser.window_handles[-1])
-            if len(comments) != 0:
-                print(comments[0])
-                tts2(comments[0])
+            read_comments_from_article(article.text, unspoken_comments)
 
         except Exception:
             print("FAIl for article ", article.text)
             pass
 
     browser.close()
-    quit()
 
 
 if __name__ == '__main__':
-    read_first_comment_in_first_article()
+    while True:
+        print("new run")
+        read_all_vg_comments()
