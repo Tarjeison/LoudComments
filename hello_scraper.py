@@ -1,9 +1,5 @@
-import os
 import time
-from typing import List
 
-from gtts import gTTS
-from playsound import playsound
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver import Firefox
@@ -14,21 +10,10 @@ from selenium.webdriver.remote.webelement import WebElement
 import comment_utils
 
 
-def tts1(word: str):
-    # languages = ['no', 'fr', 'da', 'it', 'pl']
-    # language = random.choice(languages)
-    language = 'no'
-    myobj = gTTS(text=word, lang=language, slow=False)
-    myobj.save("comment.mp3")
-    playsound("comment.mp3")
-    os.remove("comment.mp3")
-
-
 def build_firefox() -> Firefox:
     opts = Options()
     opts.add_argument("--headless")
-    #return Firefox(executable_path='C:\\Users\\Trym\\drivers\\gecko\\geckodriver.exe', options=opts)
-    return Firefox(options=opts)
+    return Firefox(executable_path='C:\\Users\\Trym\\drivers\\gecko\\geckodriver.exe', options=opts)
 
 
 def get_text_from_web_element(web_element: WebElement):
@@ -66,14 +51,6 @@ def dismiss_gdpr_if_present(browser: Firefox):
         pass
 
 
-def read_comments_from_article(article_title: str, comments: List[str]):
-    if len(comments) == 0:
-        return
-    tts1("Fra saken: " + article_title.replace("\n", " "))
-    for comment in comments:
-        tts1(comment)
-
-
 def read_all_vg_comments():
     browser = build_firefox()
     browser.get('https://vg.no')
@@ -94,7 +71,6 @@ def read_all_vg_comments():
             comment_utils.save_comments(unspoken_comments)
             browser.close()
             browser.switch_to.window(browser.window_handles[-1])
-            read_comments_from_article(article.text, unspoken_comments)
 
         except Exception:
             print("FAIl for article ", article.text)
