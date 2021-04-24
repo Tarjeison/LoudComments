@@ -14,8 +14,9 @@ import time
 
 
 def tts1(word: str):
-    languages = ['no', 'fr', 'da', 'it', 'pl']
-    language = random.choice(languages)
+    # languages = ['no', 'fr', 'da', 'it', 'pl']
+    # language = random.choice(languages)
+    language = 'no'
     myobj = gTTS(text=word, lang=language, slow=False)
     myobj.save("comment.mp3")
     playsound("comment.mp3")
@@ -24,7 +25,6 @@ def tts1(word: str):
 
 def build_firefox() -> Firefox:
     opts = Options()
-    opts.headless = True
     return Firefox(executable_path='C:\\Users\\Trym\\drivers\\gecko\\geckodriver.exe', options=opts)
 
 
