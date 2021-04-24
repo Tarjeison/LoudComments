@@ -22,7 +22,7 @@ def get_only_unspoken_comments(comments: List[str]) -> List[str]:
         if hashed_comment not in all_spoken_hash:
             print("new comment: " + formatted_comment)
             unspoken_comments.append(formatted_comment)
-        kafka_producer.format_and_send_to_kafka(comment)
+            kafka_producer.format_and_send_to_kafka(comment)
 
     return unspoken_comments
 
