@@ -1,16 +1,17 @@
-from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-import random
-import comment_utils
-from typing import List
-from gtts import gTTS
-from playsound import playsound
 import os
 import time
+from typing import List
+
+from gtts import gTTS
+from playsound import playsound
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
+from selenium.webdriver import Firefox
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.remote.webelement import WebElement
+
+import comment_utils
 
 
 def tts1(word: str):
@@ -25,7 +26,9 @@ def tts1(word: str):
 
 def build_firefox() -> Firefox:
     opts = Options()
-    return Firefox(executable_path='C:\\Users\\Trym\\drivers\\gecko\\geckodriver.exe', options=opts)
+    opts.add_argument("--headless")
+    #return Firefox(executable_path='C:\\Users\\Trym\\drivers\\gecko\\geckodriver.exe', options=opts)
+    return Firefox(options=opts)
 
 
 def get_text_from_web_element(web_element: WebElement):
