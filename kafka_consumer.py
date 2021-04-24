@@ -6,7 +6,7 @@ from kafka import KafkaConsumer
 
 
 def get_kafka_consumer():
-    return KafkaConsumer(group_id='vg_comments_1', bootstrap_servers='localhost:9092',
+    return KafkaConsumer(group_id='vg_comments_pi', bootstrap_servers='localhost:9092',
                          value_deserializer=lambda m: json.loads(m.decode('utf-8')))
 
 
