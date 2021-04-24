@@ -17,7 +17,8 @@ def tts_pi(word: str):
     language = 'no'
     myobj = gTTS(text=word, lang=language, slow=False)
     myobj.save("comment.mp3")
-    os.system('mpg321 foo.mp3 &')
+    print('tts saved')
+    os.system('mpg321 comment.mp3')
     os.remove("comment.mp3")
 
 
